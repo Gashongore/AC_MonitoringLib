@@ -1,119 +1,54 @@
-/*
-  Emon.h - Library for openenergymonitor
-  Created by Trystan Lea, April 27 2010
-  GNU GPL
-  modified to use up to 12 bits ADC resolution (ex. Arduino Due & Spark Core/Photon)
-  by boredman@boredomprojects.net 26.12.2013
-  Low Pass filter for offset removal replaces HP filter 1/1/2015 - RW
-*/
 
-/****************************************************************************************
 
-Modified for multiphase and renamed AC_MOnitorLib
-by Prince Gashongore
+#if defined(ARDUINO) && ARDUINO >= 100
 
-2020/12/19
+#include "Arduino.h"
 
-****************************************************************************************/
+#else
 
-#ifndef AC_MOnitorLib_h
-#define AC_MOnitorLib_h
+#include "WProgram.h"
 
-#include "application.h"
+#endif
 
-#include "math.h"
-
-// to enable 12-bit ADC resolution on Arduino Due, 
-// include the following line in main sketch inside setup() function:
-//  analogReadResolution(ADC_BITS);
-// otherwise will default to 10 bits, as in regular Arduino-based boards.
 
 #define ADC_BITS    12
-
 
 #define ADC_COUNTS  (1<<ADC_BITS)
 
 
-class EnergyMonitor
+class Load_Monitor
 {
   public:
+     
+    //For configuring connected CTs and pass the info to the calcrms();
 
-    void voltage(unsigned int _inPinV, double _VCAL, double _PHASECAL);
-    void current(unsigned int _inPinI, double _ICAL);
+    typedef struct CT_Data{
+    //Get these from calibration.h ??
+       int CT_PIN;
+       const double ICAL;
+      //offsetI = ADC_COUNTS>>1;
 
-    void calcVI(unsigned int crossings, unsigned int timeout);
-    double calcIrms(unsigned int NUMBER_OF_SAMPLES);
-    void serialprint();
+      }CT_Property_Struct;
 
-    //Useful value variables
-    double realPower,
-       apparentPower,
-       powerFactor,
-       Vrms,
-       Irms;
-//############################################################################
+      /* Input: Pin info struct
+         Output: Current RMS
+      */
+    
+    double calcIrms(CT_Property_Struct data);
 
-   
+
   private:
-
-    //Set Voltage and current input pins
-    unsigned int inPinV;
-    unsigned int inPinI;
-    //Calibration coefficients
-    //These need to be set in order to obtain accurate results
-    double VCAL;
-    double ICAL;
-    double PHASECAL;
 
     //--------------------------------------------------------------------------------------
     // Variable declaration for emon_calc procedure
     //--------------------------------------------------------------------------------------
-	int sampleV;   //sample_ holds the raw analog read value
-	int sampleI;                      
+    //sample_ holds the raw analog read value
+    
+    int sampleI;
 
-	double lastFilteredV,filteredV;                   //Filtered_ is the raw analog value minus the DC offset
-	double filteredI;
-	double offsetV;                          //Low-pass filter output
-	double offsetI;                          //Low-pass filter output               
+    double filteredI;
+    double offsetI;                          //Low-pass filter output
 
-	double phaseShiftedV;                             //Holds the calibrated phase shifted voltage.
-
-	double sqV,sumV,sqI,sumI,instP,sumP;              //sq = squared, sum = Sum, inst = instantaneous
-
-	int startV;                                       //Instantaneous voltage at start of sample window.
-
-	boolean lastVCross, checkVCross;                  //Used to measure number of times threshold is crossed.
-  
-//-------------------------------------------
-
+    double sqI,sumI,instP,sumP;              //sq = squared, sum = Sum, inst = instantaneous
 };
 
-class AC_Monitor
-{
-private:
-  /* data */
-    // Measured current from CTs
-double RMS_Current_CT1;
-double RMS_Current_CT2;
-double RMS_Current_CT3;
-double RMS_Current_CT4;
-double RMS_Current_CT5;
-double RMS_Current_CT6;
-
-//Estimated Power from each CTs
-
-double apparentPower_CT1;
-double apparentPower_CT2;
-double apparentPower_CT3;
-double apparentPower_CT4;
-double apparentPower_CT5;
-double apparentPower_CT6;
-
-public:
-   
-    void Monitor_Init(void);
-
-    void Single_Phase_Monitor(uint8_t CT_ID, double *Current, double *Power);
-};
-
-#endif

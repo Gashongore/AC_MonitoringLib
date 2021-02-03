@@ -1,42 +1,42 @@
-/*
-    -----------------------------------------
-  Part of the openenergymonitor.org project
-  Licence: GNU GPL V3
-*/ 
+#include "AC_MonitorLib.h"         // Include Load_Monitoring Library
 
-#include "AC_Monitor.h"                   // Include Emon Library
-AC_Monitor Config;
-AC_Monitor ct1_test;                     // Create an instance
+//--------------------------------------------------------------------------- Pins assignment/Functions definition-> DON'T CHANGE/MODIFY THESE                               
+uint8_t CT1_PIN=A0; // pin where the CT is connected 
+const double CT1_Cal = 90.91; // calculated value is 100A:0.05A for transformer / 22 Ohms for resistor = 90.91, or 60.6
 
+Load_Monitor KUMVA_IO;     //Create an instance
+
+/***************************************************************************************************************************************END
+*/
+  //CT undertest property
+   
+Load_Monitor::CT_Property_Struct CT_UnderTest={CT1_PIN, CT1_Cal};
   int count = 0;
   float meassurements[20];
   float maximum = 0;
   float minimum = 0;
   float average_addition = 0;
-
+ double CurrentRms=0;
 
 void setup()
 { 
-  Config.Monitor_Init();
-   
+  
+ 
   Serial.begin(9600);
 
-  double iA,pA;
- 
-  ct1_test.SinglePhaseMonitor(0,&iA,&B);             // CT channel, calibration.
-  
   delay(50);
   
 }
 
 void loop()
 {
-  ct1_test.Single_Phase_Monitor(0,&iA,&B);
-  //ct1.Irms(1662);                 // 
-  Serial.print(iA);
+ 
+  
+  double CurrentRms = KUMVA_IO.calcIrms(CT_UnderTest);  // Calculate Irms only, use this for CT accuracy testing only 
+  Serial.print(CurrentRms);  
   Serial.println(' ');
   
-  meassurements[count] =iA;
+  meassurements[count] =CurrentRms;
   count++;
   delay(50);
 
