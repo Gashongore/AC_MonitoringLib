@@ -1,3 +1,13 @@
+/**---------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Project : Electric Load Monitoring
+ * Description: Using non-intrusive Current sensors to monitor electric loads and estimate their power
+ * Author: Prince Gashongore
+ * For: Kumva Insight (https://kumva.io)
+ * Date: 18 February 2021
+ 
+ * The library was heavily modified from the EmonLib by openenergymonitor community
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
 
 
 #if defined(ARDUINO) && ARDUINO >= 100

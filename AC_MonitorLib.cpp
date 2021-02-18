@@ -1,4 +1,15 @@
-/*
+/**---------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Project : Electric Load Monitoring
+ * Description: Using non-intrusive Current sensors to monitor electric loads and estimate their power
+ * Author: Prince Gashongore
+ * For: Kumva Insight (https://kumva.io)
+ * Date: 18 February 2021
+ 
+ * The library was heavily modified from the EmonLib by openenergymonitor community
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------- Description of the modified library
   Emon.cpp - Library for openenergymonitor
   Created by Trystan Lea, April 27 2010
   GNU GPL
@@ -10,6 +21,8 @@
 // Proboscide99 10/08/2016 - Added ADMUX settings for ATmega1284 e 1284P (644 / 644P also, but not tested) in readVcc function
 
 //#include "WProgram.h" un-comment for use on older versions of Arduino IDE
+
+
 #include "AC_MonitorLib.h"
 
 #if defined(ARDUINO) && ARDUINO >= 100
