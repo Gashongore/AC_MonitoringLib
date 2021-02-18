@@ -35,7 +35,7 @@ double Load_Monitor::calcIrms(CT_Property_Struct data){
 
     // Digital low pass filter extracts the 2.5 V or 1.65 V dc offset,
     //  then subtract this - signal is now centered on 0 counts.
-    offsetI = (offsetI + (sampleI-offsetI)/1024);
+    offsetI = (offsetI + (sampleI-offsetI)/ADC_COUNTS);
     filteredI = sampleI - offsetI;
 
     // Root-mean-square method current
